@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    INDEX TODO
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Todo</th>
+            <th>DueDate</th>
+            <th>Content</th>
+            <th>Control</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for todo in todoList %}
+            <tr>
+                <td scope="row">{{ todo.id }}</td>
+                <td>{{ todo.name }}</td>
+                <td>{{ todo.duedate | date('Y-m-d H:i:s')}}</td>
+{#                <td>{{ todo.due_date | date('Y-m-d H:i:s')}}</td>#}
+
+                <td>
+                    <button class="btn btn-outline-success">View</button>
+                    <button class="btn btn-outline-danger">Delete</button>
+                    <button class="btn btn-outline-primary">Edit</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
