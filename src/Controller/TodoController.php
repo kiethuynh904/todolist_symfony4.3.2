@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Todo;
+use App\Form\formtype;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TodoController extends AbstractController
 {
+
     /**
      * @Route("/todo", name="todolist" ,methods={"GET","HEAD"})
      */
@@ -30,6 +32,21 @@ class TodoController extends AbstractController
             'todoList' => $todoList
         ));
     }
+    public function createMyForm($todo, $form)
+    {
+        $name = $form['name']->getData();
+        $category = $form['category']->getData();
+        $description = $form['description']->getData();
+        $priority = $form['priority']->getData();
+        $due_date = $form['due_date']->getData();
+        $now = new \DateTime('now');
+        $todo->setName($name);
+        $todo->setCategory($category);
+        $todo->setDescription($description);
+        $todo->setPriority($priority);
+        $todo->setDueDate($due_date);
+        $todo->setCreateDate($now);
+    }
 
     /**
      * @Route("/todo/create", name="create")
@@ -37,44 +54,12 @@ class TodoController extends AbstractController
     public function createAction(Request $request)
     {
         $todo = new Todo();
-        $form = $this->createFormBuilder($todo)
-            ->add('name',TextType::class,array(
-                'attr'=>array('class'=> 'form-control')
-            ))
-            ->add('category',TextType::class,array(
-                'attr'=>array('class'=> 'form-control')
-            ))
-            ->add('description',TextareaType::class,array(
-                'attr'=>array('class'=> 'form-control')
-            ))
-            ->add('priority',ChoiceType::class,array(
-                'attr'=>array('class'=> 'form-control'),
-                'choices'=>array('Low' => 'Low','Normal'=>'Normal','High'=>'High')
-            ))
-            ->add('due_date',DateTimeType::class,array(
-                'attr'=>array('class'=> 'form-control')
-            ))
-            ->add('save',SubmitType::class,array(
-                'label'=>'Create Todo',
-                'attr'=>array('class'=> 'btn btn-success')
-            ))
-            ->getForm();
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-//            die('Submited');
-            $name = $form['name']->getData();
-            $category = $form['category']->getData();
-            $description = $form['description']->getData();
-            $priority = $form['priority']->getData();
-            $due_date = $form['due_date']->getData();
+        $form = $this->createForm(formtype::class, $todo);
 
-            $now = new \DateTime('now');
-            $todo->setName($name);
-            $todo->setCategory($category);
-            $todo->setDescription($description);
-            $todo->setPriority($priority);
-            $todo->setDueDate($due_date);
-            $todo->setCreateDate($now);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->createMyForm($todo,$form);
+
             $em = $this->getDoctrine()->getManager();
 
             $em->persist($todo);
@@ -82,11 +67,11 @@ class TodoController extends AbstractController
             $em->flush();
             $this->addFlash(
                 'notice',
-                'Todo Added'
+                'added'
             );
             return $this->redirectToRoute('todolist');
         }
-        return $this->render('todo/create.html.twig',array(
+        return $this->render('todo/create.html.twig', array(
             'form' => $form->createView()
         ));
     }
@@ -106,48 +91,14 @@ class TodoController extends AbstractController
         $todo->setPriority($todo->getPriority());
         $todo->setDueDate($todo->getDueDate());
         $todo->setCreateDate($todo->getCreateDate());
-        $form = $this->createFormBuilder($todo)
-            ->add('name',TextType::class,array(
-                'attr'=>array('class'=> 'form-control')
-            ))
-            ->add('category',TextType::class,array(
-                'attr'=>array('class'=> 'form-control')
-            ))
-            ->add('description',TextareaType::class,array(
-                'attr'=>array('class'=> 'form-control')
-            ))
-            ->add('priority',ChoiceType::class,array(
-                'attr'=>array('class'=> 'form-control'),
-                'choices'=>array('Low' => 'Low','Normal'=>'Normal','High'=>'High')
-            ))
-            ->add('due_date',DateTimeType::class,array(
-                'attr'=>array('class'=> 'form-control')
-            ))
-            ->add('save',SubmitType::class,array(
-                'label'=>'Create Todo',
-                'attr'=>array('class'=> 'btn btn-success')
-            ))
-            ->getForm();
+        $form = $this->createForm(formtype::class, $todo);
+
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 //            GET VALUE
             $em = $this->getDoctrine()->getManager();
-            $todo =$em->getRepository(Todo::class)->find($id);
-            $name = $form['name']->getData();
-            $category = $form['category']->getData();
-            $description = $form['description']->getData();
-            $priority = $form['priority']->getData();
-            $due_date = $form['due_date']->getData();
-//          SET VALUE
-            $now = new \DateTime('now');
-            $todo->setName($name);
-            $todo->setCategory($category);
-            $todo->setDescription($description);
-            $todo->setPriority($priority);
-            $todo->setDueDate($due_date);
-            $todo->setCreateDate($now);
-
-
+            $todo = $em->getRepository(Todo::class)->find($id);
+            $this->createMyForm($todo,$form);
             $em->persist($todo);
 
             $em->flush();
@@ -159,7 +110,7 @@ class TodoController extends AbstractController
         }
         return $this->render('todo/edit.html.twig', array(
             'todo' => $todo,
-            'form'=>$form->createView()
+            'form' => $form->createView()
         ));
     }
 
@@ -177,13 +128,14 @@ class TodoController extends AbstractController
             'todo' => $todo
         ));
     }
+
     /**
      * @Route("/todo/delete/{id}", name="delete")
      */
     public function deleteAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $todo =$em->getRepository(Todo::class)->find($id);
+        $todo = $em->getRepository(Todo::class)->find($id);
         $em->remove($todo);
         $em->flush();
         $this->addFlash(
