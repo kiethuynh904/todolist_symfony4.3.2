@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Todo;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,7 +24,6 @@ class TodoController extends AbstractController
         $todoList = $this->getDoctrine()
             ->getRepository(Todo::class)
             ->findAll();
-
 //        dump($todoList);
 //        die();
         return $this->render('todo/index.html.twig', array(
@@ -54,12 +54,41 @@ class TodoController extends AbstractController
             ->add('due_date',DateTimeType::class,array(
                 'attr'=>array('class'=> 'form-control')
             ))
+            ->add('save',SubmitType::class,array(
+                'label'=>'Create Todo',
+                'attr'=>array('class'=> 'btn btn-success')
+            ))
             ->getForm();
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-            die('Submited');
+//            die('Submited');
+            $name = $form['name']->getData();
+            $category = $form['category']->getData();
+            $description = $form['description']->getData();
+            $priority = $form['priority']->getData();
+            $due_date = $form['due_date']->getData();
+
+            $now = new \DateTime('now');
+            $todo->setName($name);
+            $todo->setCategory($category);
+            $todo->setDescription($description);
+            $todo->setPriority($priority);
+            $todo->setDueDate($due_date);
+            $todo->setCreateDate($now);
+            $em = $this->getDoctrine()->getManager();
+
+            $em->persist($todo);
+
+            $em->flush();
+            $this->addFlash(
+                'notice',
+                'Todo Added'
+            );
+            return $this->redirectToRoute('todolist');
         }
-        return $this->render('todo/create.html.twig');
+        return $this->render('todo/create.html.twig',array(
+            'form' => $form->createView()
+        ));
     }
 
     /**
