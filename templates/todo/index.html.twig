@@ -6,9 +6,11 @@
     <table class="table">
         <thead>
         <tr>
+            <th>ID</th>
             <th>Todo</th>
+            <th>CreateDate</th>
             <th>DueDate</th>
-            <th>Content</th>
+            <th>Description</th>
             <th>Control</th>
         </tr>
         </thead>
@@ -18,9 +20,9 @@
             <tr>
                 <td scope="row">{{ todo.id }}</td>
                 <td>{{ todo.name }}</td>
-                <td>{{ todo.duedate | date('Y-m-d H:i:s')}}</td>
-{#                <td>{{ todo.due_date | date('Y-m-d H:i:s')}}</td>#}
-
+                <td>{{ todo.createdate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ todo.duedate | date('Y-m-d H:i:s') }}</td>
+                <td>{{ todo.description }}</td>
                 <td>
                     <a href="/todo/detail/{{ todo.id }}" class="btn btn-outline-success">View</a>
                     <a href="/todo/delete/{{ todo.id }}" class="btn btn-outline-danger">Delete</a>

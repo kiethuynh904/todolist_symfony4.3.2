@@ -32,7 +32,11 @@ class formtype extends AbstractType
                 'choices'=>array('Low' => 'Low','Normal'=>'Normal','High'=>'High')
             ))
             ->add('due_date',DateTimeType::class,array(
-                'attr'=>array('class'=> 'form-control')
+                'attr'=>array('class'=> ''),
+                'placeholder' => [
+                    'year' => '2019', 'month' => 'Month', 'day' => 'Day',
+                    'hour' => 'Hour', 'minute' => 'Minute', 'second' => 'Second',
+                ]
             ))
             ->add('save',SubmitType::class,array(
                 'label'=>'Create Todo',

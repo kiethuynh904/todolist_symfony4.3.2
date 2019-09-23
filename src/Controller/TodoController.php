@@ -6,13 +6,10 @@ namespace App\Controller;
 
 use App\Entity\Todo;
 use App\Form\formtype;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TodoController extends AbstractController
@@ -50,6 +47,8 @@ class TodoController extends AbstractController
 
     /**
      * @Route("/todo/create", name="create")
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function createAction(Request $request)
     {
@@ -144,6 +143,4 @@ class TodoController extends AbstractController
         );
         return $this->redirectToRoute('todolist');
     }
-
-
 }
