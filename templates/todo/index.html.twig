@@ -22,9 +22,9 @@
 {#                <td>{{ todo.due_date | date('Y-m-d H:i:s')}}</td>#}
 
                 <td>
-                    <button class="btn btn-outline-success">View</button>
-                    <button class="btn btn-outline-danger">Delete</button>
-                    <button class="btn btn-outline-primary">Edit</button>
+                    <a href="/todo/detail/{{ todo.id }}" class="btn btn-outline-success">View</a>
+                    <a href="/todo/delete/{{ todo.id }}" class="btn btn-outline-danger">Delete</a>
+                    <a href="/todo/edit/{{ todo.id }}" class="btn btn-outline-primary">Edit</a>
                 </td>
             </tr>
         {% endfor %}
