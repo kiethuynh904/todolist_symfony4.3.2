@@ -6,31 +6,32 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('/assets/css/base.css') }}">
     {% block stylesheets %}
 
     {% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <a class="navbar-brand" href="/todo">TODOLIST</a>
+<nav class="navbar navbar-expand-sm mynav">
+    <a class="navbar-brand" style="color: #FFE4E1; letter-spacing: 2px" href="/todo">TODOLIST</a>
     <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
             aria-controls="collapsibleNavId"
             aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="container collapse navbar-collapse" id="collapsibleNavId">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+    <div class="container collapse navbar-collapse" id="collapsibleNavId mynav-menu">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0 mynav-menu-list">
             <li class="nav-item">
-                <a class="nav-link" href="/todo">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link nav-menu" href="/todo">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/todo/create">Create</a>
+                <a class="nav-link nav-menu" href="/todo/create">Create</a>
             </li>
 
         </ul>
         <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search">
-            <a  class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</a>
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
 </nav>

@@ -1,8 +1,11 @@
 {% extends 'base.html.twig' %}
+ {% block stylesheets %}
+     <link rel="stylesheet" href="{{ asset('/assets/css/detail.css') }}">
+ {% endblock %}
 
 {% block body %}
-    <a class="btn btn-warning" style="margin-top: 10px;" href="/todo">Back To Todolist</a>
-    <hr>
+<p class="test">abxcasjd</p>
+
     <h2 class="page-header">{{ todo.name }}</h2>
     <ul class="list-group">
         <li class="list-group-item">Category:{{ todo.category }}</li>
@@ -13,4 +16,6 @@
     <p>
         {{ todo.description }}
     </p>
+    <hr>
+    <a class="btn btn-warning" style="margin-top: 10px;" href="/todo">Back To Todolist</a>
 {% endblock %}
